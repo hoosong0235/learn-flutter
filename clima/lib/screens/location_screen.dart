@@ -2,6 +2,7 @@ import 'package:clima/screens/city_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:clima/utilities/constants.dart';
 import 'package:clima/services/weather.dart';
+import 'package:clima/services/networking.dart';
 
 class LocationScreen extends StatefulWidget {
   late dynamic body;
@@ -67,8 +68,8 @@ class _LocationScreenState extends State<LocationScreen> {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
+                    onPressed: () async {
+                      String value = await Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: ((context) {
@@ -76,6 +77,13 @@ class _LocationScreenState extends State<LocationScreen> {
                           }),
                         ),
                       );
+                      try {
+                        dynamic body =
+                            await Networking(q: value).getResponseBody();
+                        update(body);
+                      } catch (e) {
+                        print(e);
+                      }
                     },
                     child: Icon(
                       Icons.location_city,
